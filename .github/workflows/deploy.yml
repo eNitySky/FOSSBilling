@@ -1,0 +1,35 @@
+name: Deploy to HestiaCP
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "Deploying dev branch to portal.enitysky.dev on HestiaCP"
+            
+            # 1. Access portal directory
+            cd ${{ secrets.DEPLOY_PATH_PORTAL }}
+            
+            # 2. Update source code (Reset hard strategy)
+            git fetch origin
+            git reset --hard origin/dev
+            
+            # 3. Install dependencies
+            composer install --no-dev --optimize-autoloader
+            
+            # 4. Correct permissions for FOSSBilling
+            chmod -R 775 src/data
+            
+            # Success message
+            echo "Deployment completed successfully!"
