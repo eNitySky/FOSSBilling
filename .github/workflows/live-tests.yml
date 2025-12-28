@@ -2,8 +2,11 @@ name: Perform Live Tests
 
 on:
   push:
+    branches:
+      - upstream
   pull_request:
-    branches: main
+    branches:
+      - upstream
 
 env:
     DB_HOST: 127.0.0.1
