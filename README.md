@@ -83,3 +83,4 @@ This project includes third-party work:
 - Forum: https://forum.fossbilling.org  
 - Discord: https://fossbilling.org/discord  
 - Twitter/X: https://twitter.com/FOSSBilling
+# Portal Deployment Test - dom 28 dic 2025 16:50:37 CST
