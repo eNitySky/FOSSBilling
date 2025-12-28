@@ -19,8 +19,20 @@ jobs:
           extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql
           tools: composer
 
-      - name: Install dependencies
+      - name: Install PHP dependencies
         run: composer install --no-dev --optimize-autoloader
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
 
       - name: Deploy to Server via Rsync
         uses: Burnett01/rsync-deployments@7.0.1
