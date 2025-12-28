@@ -25,24 +25,13 @@ jobs:
       - name: Deploy to Server via Rsync
         uses: Burnett01/rsync-deployments@7.0.1
         with:
-          switches: -avzr --delete
+          switches: -avzr --delete --exclude=.git/ --exclude=.github/ --exclude=.editorconfig --exclude=.php-cs-fixer.dist.php --exclude=phpstan.neon --exclude=phpunit.xml.dist --exclude=tests/ --exclude=tests-legacy/ --exclude=Dockerfile --exclude=rector.php
           path: ./
           remote_path: ${{ secrets.DEPLOY_PATH_PORTAL }}
           remote_host: ${{ secrets.SSH_HOST }}
+          remote_port: ${{ secrets.SSH_PORT || 22 }}
           remote_user: ${{ secrets.SSH_USER }}
           remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          # Excluimos carpetas de desarrollo y configuración de CI
-          exclude: |
-            .git/
-            .github/
-            .editorconfig
-            .php-cs-fixer.dist.php
-            phpstan.neon
-            phpunit.xml.dist
-            tests/
-            tests-legacy/
-            Dockerfile
-            rector.php
 
       - name: Post-deployment permissions
         uses: appleboy/ssh-action@v1.0.3
