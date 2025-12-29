@@ -6,38 +6,36 @@ on:
       - dev
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql
-          tools: composer
-
-      - name: Install PHP dependencies
-        run: composer install --no-dev --optimize-autoloader
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install Node dependencies
-        run: npm ci
-
-      - name: Build assets
-        run: npm run build
-
       - name: Deploy to Server via Rsync
         uses: Burnett01/rsync-deployments@7.0.1
         with:
-          switches: -avzr --delete --exclude=.git/ --exclude=.github/ --exclude=.editorconfig --exclude=.php-cs-fixer.dist.php --exclude=phpstan.neon --exclude=phpunit.xml.dist --exclude=tests/ --exclude=tests-legacy/ --exclude=Dockerfile --exclude=rector.php --exclude=src/config.php --exclude=src/data/cache/ --exclude=src/data/log/ --exclude=src/data/uploads/
+          # Sincronización rápida: se asume que las dependencias y assets se gestionan en el servidor
+          switches: >-
+            -avzr --delete 
+            --exclude=.git/ 
+            --exclude=.github/ 
+            --exclude=.editorconfig 
+            --exclude=.php-cs-fixer.dist.php 
+            --exclude=phpstan.neon 
+            --exclude=phpunit.xml.dist 
+            --exclude=tests/ 
+            --exclude=tests-legacy/ 
+            --exclude=Dockerfile 
+            --exclude=rector.php 
+            --exclude=src/config.php 
+            --exclude=src/data/cache/ 
+            --exclude=src/data/log/ 
+            --exclude=src/data/uploads/ 
+            --exclude=vendor/ 
+            --exclude=node_modules/ 
+            --exclude=src/themes/*/build/ 
+            --exclude=src/modules/*/build/
           path: ./
           remote_path: ${{ secrets.DEPLOY_PATH_PORTAL }}
           remote_host: ${{ secrets.SSH_HOST }}
