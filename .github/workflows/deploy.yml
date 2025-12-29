@@ -37,7 +37,7 @@ jobs:
       - name: Deploy to Server via Rsync
         uses: Burnett01/rsync-deployments@7.0.1
         with:
-          switches: -avzr --delete --exclude=.git/ --exclude=.github/ --exclude=.editorconfig --exclude=.php-cs-fixer.dist.php --exclude=phpstan.neon --exclude=phpunit.xml.dist --exclude=tests/ --exclude=tests-legacy/ --exclude=Dockerfile --exclude=rector.php
+          switches: -avzr --delete --exclude=.git/ --exclude=.github/ --exclude=.editorconfig --exclude=.php-cs-fixer.dist.php --exclude=phpstan.neon --exclude=phpunit.xml.dist --exclude=tests/ --exclude=tests-legacy/ --exclude=Dockerfile --exclude=rector.php --exclude=src/config.php
           path: ./
           remote_path: ${{ secrets.DEPLOY_PATH_PORTAL }}
           remote_host: ${{ secrets.SSH_HOST }}
