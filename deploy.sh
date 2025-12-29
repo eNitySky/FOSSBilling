@@ -2,10 +2,10 @@
 
 # --- CONFIGURACIÓN ---
 # Reemplaza con tus datos reales si no quieres usar variables de entorno
-SSH_USER="${SSH_USER:-admin}"
-SSH_HOST="${SSH_HOST:-portal.enitysky.dev}"
+SSH_USER="${SSH_USER:-webmaster}"
+SSH_HOST="${SSH_HOST:-esd-hosting}"
 SSH_PORT="${SSH_PORT:-22}"
-DEPLOY_PATH="${DEPLOY_PATH_PORTAL:-/home/admin/web/portal.enitysky.dev/public_html}"
+DEPLOY_PATH="${DEPLOY_PATH_PORTAL:-/home/webmaster/web/portal.enitysky.dev/public_html}"
 # ----------------------
 
 echo "🚀 Iniciando despliegue local..."
