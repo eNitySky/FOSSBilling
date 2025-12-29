@@ -1,0 +1,59 @@
+name: Build and Deploy to HestiaCP
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql
+          tools: composer
+
+      - name: Install PHP dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Deploy to Server via Rsync
+        uses: Burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr --delete --exclude=.git/ --exclude=.github/ --exclude=.editorconfig --exclude=.php-cs-fixer.dist.php --exclude=phpstan.neon --exclude=phpunit.xml.dist --exclude=tests/ --exclude=tests-legacy/ --exclude=Dockerfile --exclude=rector.php --exclude=src/config.php --exclude=src/data/cache/ --exclude=src/data/log/ --exclude=src/data/uploads/
+          path: ./
+          remote_path: ${{ secrets.DEPLOY_PATH_PORTAL }}
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_port: ${{ secrets.SSH_PORT || 22 }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Post-deployment permissions
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Asegurar que las carpetas de datos existan y tengan permisos
+            cd ${{ secrets.DEPLOY_PATH_PORTAL }}
+            mkdir -p src/data/cache src/data/log src/data/uploads
+            chmod -R 775 src/data
