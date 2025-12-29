@@ -1,6 +1,6 @@
 <?php
 
-namespace Box\Mod\authentik\Controller;
+namespace Box\Mod\Authentik\Controller;
 
 class Client implements \FOSSBilling\InjectionAwareInterface
 {

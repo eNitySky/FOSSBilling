@@ -1,5 +1,5 @@
 {
-    "id": "authentik",
+    "id": "Authentik",
     "type": "mod",
     "name": "Authentik SSO",
     "description": "Integration with Authentik for Single Sign-On (SSO)",
@@ -8,8 +8,5 @@
     "author": "Antigravity",
     "author_url": "https://google.com",
     "license": "Apache-2.0",
-    "version": "0.1.0",
-    "requires": {
-        "boxbilling_version": "0.0.1"
-    }
+    "version": "0.1.0"
 }
